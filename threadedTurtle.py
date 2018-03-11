@@ -77,7 +77,8 @@ def main():
 	#Starts threads
 	for t in myThreads:
 		t.start()
-
+		
+	# TODO: finn vei om window.mainloop() her
 	#Nødvendig for at programmet ikke skal kræsje på dette tidspunktet, men hindrer det fra å tegne mer
 	window.mainloop()
 
