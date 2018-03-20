@@ -1,6 +1,5 @@
 import math
 from hans import decrypt
-from hans import gcd
 from hans import multiplicative_inverse as multiplicativeInverse
 
 #Settings:
@@ -13,10 +12,8 @@ def main(intListe, n, publicKey):
     print(keys)
     for key in keys:
         tekst = decrypt(key[1], intListe)
-        if not tekst.startswith('h'):
-            tekst = decrypt(key[0], intListe)
         try:
-            print(tekst + str(key))
+            print(tekst + str(key) + str(ord(tekst[0])))
         except Exception as e:
             print(e)
 
