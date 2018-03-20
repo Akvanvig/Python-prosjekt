@@ -43,15 +43,7 @@ def main():
     weightAdded = 0
     valueAdded = 0
     itemsAdded = [] #Value, weight
-    """for i in range(0,len(sortingList[0])):
-        if weightAdded + sortingList[1][i] <= capacities[0]:
-            itemsAdded.append([sortingList[0][i], sortingList[1][i]])
-            weightAdded += sortingList[1][i]
-            valueAdded += sortingList[0][i]
-        if weightAdded == 850:
-            break
-    """
-    for :
+    for i in range(0,len(sortingList[0])):
         if weightAdded + sortingList[1][i] <= capacities[0]:
             itemsAdded.append([sortingList[0][i], sortingList[1][i]])
             weightAdded += sortingList[1][i]
