@@ -2,7 +2,7 @@ from hans import decrypt
 
 #Settings
 primtallUnder = 64328
-startPrimtallNr = 6435
+startPrimtallNr = 0
 keyN = 100127
 
 #Genererer primtall
