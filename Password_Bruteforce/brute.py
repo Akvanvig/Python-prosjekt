@@ -34,7 +34,9 @@ def brute(p, sym, mL): #Password, symbols and maxLength
     for i in range(1, mL):  #Number of chars in password, Runs until password is found, or limit reached
         #print("length tested = " + str(i))  #Prints the length of current words getting tested
         word = list(i * listChars[0])
-        while "".join(word) != (i * listChars[l]):   #all possibilities tested, Runs until it reaches last char time number of chars guessed
+        countOptions = (l + 1) ** i - 1
+        #print(countOptions)
+        for j in range(0, countOptions):   #all possibilities tested, Checks all possibilities for current length word
             if "".join(word) == p:
                 return word
             word = increaseVal(word, listChars, l, i - 1)
@@ -46,7 +48,7 @@ def increaseVal(word, listChars, numChr, place):    #Increses value of string (w
         word = increaseVal(word, listChars, numChr, place - 1)  #Calls itself given one place lower in the string (letter in front)
         x = 0
         word[place] = listChars[x]
-        #print(word)    #Prints the current word when anything but the last value gets changed
+        #print(word)    #Prints the current word when anything but the last value gets changed (Will take a lot longer to run)
         return word
     else:
         word[place] = listChars[x + 1]
