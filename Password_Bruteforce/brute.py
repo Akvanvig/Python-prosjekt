@@ -4,6 +4,7 @@
     Brute.py
 
     Brute-forces given passwords and gives time used
+    Try expanding to run on multiple cores in the future (Possibly by dividing up search area, eg. aaa - måå, naa - ååå)
 """
 import time
 
