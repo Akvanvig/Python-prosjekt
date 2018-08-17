@@ -1,0 +1,3 @@
+Bruker Selenium for å kontrollere nettleser
+https://pypi.org/project/selenium/
+https://automatetheboringstuff.com/chapter11/
