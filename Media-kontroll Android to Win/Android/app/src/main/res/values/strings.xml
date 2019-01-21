@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">MedieKontroll</string>
+    <string name="action_settings">Settings</string>
+    <string name="btn_kontroll_play_pause">Play/Pause</string>
+    <string name="btn_kontroll_neste">Neste</string>
+    <string name="btn_kontroll_forrige">Forrige</string>
+    <string name="btn_kontroll_volum_opp">Volum opp</string>
+    <string name="btn_kontroll_volum_ned">Volum ned</string>
+    <string name="err_send_melding">Kunne ikke sende meldingen</string>
+</resources>

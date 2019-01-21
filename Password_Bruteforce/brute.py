@@ -16,9 +16,9 @@ commonSymbols = ".,?!- "
 otherSymbols = ":;_+/\\*'\"<>~^¨$£#¤%&([{]})=|§`´"
 
 #Settings
-password    = "T4*?"
-symbols     = smallLetters + largeLetters + numbers + commonSymbols + otherSymbols
-maxLength   = 5
+password    = "vwvwvwvwvwvwW"
+symbols     = 'vVwW'
+maxLength   = 14
 
 def startup():
     print("start")
@@ -41,6 +41,7 @@ def brute(p, sym, mL): #Password, symbols and maxLength
             if "".join(word) == p:
                 return word
             word = increaseVal(word, listChars, l, i - 1)
+    return 'Kunne ikke finne passordet'
 
 
 def increaseVal(word, listChars, numChr, place):    #Increses value of string (word) according to given symbols

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".MainActivity"
+    tools:showIn="@layout/activity_main">
+
+    <Button
+        android:id="@+id/btn_volum_opp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="241dp"
+        android:layout_marginEnd="150dp"
+        android:onClick="onBtnClick"
+        android:text="@string/btn_kontroll_volum_opp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TableRow
+        android:id="@+id/tableRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/btn_volum_opp"
+        tools:layout_editor_absoluteX="16dp">
+
+        <Button
+            android:id="@+id/btn_forrige"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:onClick="onBtnClick"
+            android:text="@string/btn_kontroll_forrige"
+            tools:layout_editor_absoluteX="20dp"
+            tools:layout_editor_absoluteY="413dp" />
+
+        <Button
+            android:id="@+id/btn_play_pause"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:onClick="onBtnClick"
+            android:text="@string/btn_kontroll_play_pause"
+            app:layout_constraintEnd_toStartOf="@+id/btn_neste"
+            app:layout_constraintStart_toEndOf="@+id/btn_forrige"
+            app:layout_constraintTop_toBottomOf="@+id/btn_volum_opp" />
+
+        <Button
+            android:id="@+id/btn_neste"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:onClick="onBtnClick"
+            android:text="@string/btn_kontroll_neste"
+            tools:layout_editor_absoluteX="303dp"
+            tools:layout_editor_absoluteY="413dp" />
+    </TableRow>
+
+    <Button
+        android:id="@+id/btn_volum_ned"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="150dp"
+        android:onClick="onBtnClick"
+        android:text="@string/btn_kontroll_volum_ned"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tableRow" />
+
+</android.support.constraint.ConstraintLayout>
