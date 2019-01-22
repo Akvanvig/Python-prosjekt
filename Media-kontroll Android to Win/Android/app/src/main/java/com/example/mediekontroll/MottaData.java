@@ -1,8 +1,6 @@
 package com.example.mediekontroll;
 
 import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -25,13 +23,6 @@ public class MottaData extends Thread {
     @Override
     public void run() {
         while (true) {
-            Looper.prepare();
-            mHandler = new Handler() {
-                public void handleMessage(Message msg) {
-                    // Act on the message
-                }
-            };
-            Looper.loop();
             try {
                 serverSocket = new ServerSocket(port);
             } catch (IOException ioe) {

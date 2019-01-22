@@ -8,44 +8,42 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <Button
-        android:id="@+id/btn_volum_opp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="150dp"
-        android:layout_marginTop="241dp"
-        android:layout_marginEnd="150dp"
-        android:onClick="onBtnClick"
-        android:text="@string/btn_kontroll_volum_opp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TableRow
         android:id="@+id/tableRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center_horizontal|center_vertical"
+        android:layout_marginBottom="20dp"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/btn_volum_opp"
-        tools:layout_editor_absoluteX="16dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="43dp">
+
+        <Button
+            android:id="@+id/btn_volum_ned"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/ic_volume_down_black_24dp"
+            android:onClick="onBtnClick"
+            tools:layout_editor_absoluteX="173dp"
+            tools:layout_editor_absoluteY="515dp" />
 
         <Button
             android:id="@+id/btn_forrige"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/ic_skip_previous_black_24dp"
             android:onClick="onBtnClick"
-            android:text="@string/btn_kontroll_forrige"
             tools:layout_editor_absoluteX="20dp"
             tools:layout_editor_absoluteY="413dp" />
 
         <Button
             android:id="@+id/btn_play_pause"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/ic_play_arrow_black_24dp"
             android:onClick="onBtnClick"
-            android:text="@string/btn_kontroll_play_pause"
             app:layout_constraintEnd_toStartOf="@+id/btn_neste"
             app:layout_constraintStart_toEndOf="@+id/btn_forrige"
             app:layout_constraintTop_toBottomOf="@+id/btn_volum_opp" />
@@ -53,24 +51,23 @@
         <Button
             android:id="@+id/btn_neste"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/ic_skip_next_black_24dp"
             android:onClick="onBtnClick"
-            android:text="@string/btn_kontroll_neste"
             tools:layout_editor_absoluteX="303dp"
             tools:layout_editor_absoluteY="413dp" />
-    </TableRow>
 
-    <Button
-        android:id="@+id/btn_volum_ned"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="150dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="150dp"
-        android:onClick="onBtnClick"
-        android:text="@string/btn_kontroll_volum_ned"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tableRow" />
+        <Button
+            android:id="@+id/btn_volum_opp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/ic_volume_up_black_24dp"
+            android:onClick="onBtnClick"
+            tools:layout_editor_absoluteX="173dp"
+            tools:layout_editor_absoluteY="194dp" />
+
+    </TableRow>
 
 </android.support.constraint.ConstraintLayout>

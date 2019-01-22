@@ -7,4 +7,6 @@
     <string name="btn_kontroll_volum_opp">Volum opp</string>
     <string name="btn_kontroll_volum_ned">Volum ned</string>
     <string name="err_send_melding">Kunne ikke sende meldingen</string>
+    <string name="action_avslutt_server">Avslutt Server</string>
+    <string name="server_avsluttet">Serveren har blitt avsluttet</string>
 </resources>
