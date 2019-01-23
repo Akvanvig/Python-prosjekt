@@ -1,12 +1,18 @@
 package com.example.mediekontroll;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -14,6 +20,21 @@ public class MainActivity extends AppCompatActivity {
     int sPort = 49433;
     int mPort = 49434;
     MottaData serverThread;
+    final Handler myHandler = new Handler();
+
+    //Variabler brukt for å vise sanginfo
+    private String hostnavn = "";
+    private boolean endretHostnavn = false;
+    private Sang sang = new Sang("", "", "", "");
+    private boolean endretSangnavn = false;
+    private boolean spiller = false;
+    private boolean endretSpiller = false;
+    private SangTid tid = new SangTid(0,0);
+    private boolean endretTid = false;
+
+    //Gui-elementer
+    TextView hostView;
+    Button playPauseView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +42,28 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        synchronized(SharedData_Motta_Main.globalInstance) {
+            hostnavn = SharedData_Motta_Main.globalInstance.hostnavn;
+            endretHostnavn = SharedData_Motta_Main.globalInstance.endretHostnavn;
+            sang = SharedData_Motta_Main.globalInstance.sang;
+            endretSangnavn = SharedData_Motta_Main.globalInstance.endretSangnavn;
+            spiller = SharedData_Motta_Main.globalInstance.spiller;
+            endretSpiller = SharedData_Motta_Main.globalInstance.endretSpiller;
+            tid = SharedData_Motta_Main.globalInstance.tid;
+            endretTid = SharedData_Motta_Main.globalInstance.endretTid;
+        }
+
+        //Henter referanser til Gui-elementer
+        hostView = (TextView) findViewById(R.id.txtHostnavn);
+        playPauseView = (Button) findViewById(R.id.btn_play_pause);
+
+        //Setter opp jevnlige oppdateringer av gui
+        Timer myTimer = new Timer();
+        myTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {updateGui();}
+        }, 0, 1000);
 
         //Starter å lytte på nettverket på oppgitt port
         serverThread = new MottaData(ip, mPort);
@@ -69,5 +112,52 @@ public class MainActivity extends AppCompatActivity {
     private void sendBeskjed(String beskjed) {
         SendData t = new SendData(ip, sPort, beskjed);
         t.start();
+    }
+
+    private void updateGui() {
+        myHandler.post(myRunnable);
+    }
+
+    final Runnable myRunnable = new Runnable() {
+        public void run() {
+            hostView.setText(hostnavn);
+        }
+    };
+}
+
+class Sang {
+    private String tittel;
+    private String artist;
+    private String album;
+    private String albumBilde;
+
+    public Sang(String tittel, String artist, String album, String albumBilde) {
+        this.tittel = tittel;
+        this.artist = artist;
+        this.album = album;
+        this.albumBilde = albumBilde;
+    }
+
+    public void setTittel(String str) {
+        this.tittel = str;
+    }
+    public void setArtist(String str) {
+        this.artist = str;
+    }
+    public void setAlbum(String str) {
+        this.album = str;
+    }
+    public void setAlbumBilde(String str) {
+        this.albumBilde = str;
+    }
+}
+
+class SangTid {
+    private int current;
+    private int total;
+
+    public SangTid(int current, int total) {
+        this.current = current;
+        this.total = total;
     }
 }
