@@ -12,6 +12,7 @@ import threading
 import queue
 import socket
 import time
+import json
 #Mediakontroll
 from pyautogui import press
 import os
@@ -64,17 +65,20 @@ class sendDataThread (threading.Thread):
         self.port = port
         self.maksTilkoblinger = maksTilkoblinger
         self.addressList = []
-        self.fortsett = True
 
     def run(self):
         print('Kjører send data tråd')
-        while self.fortsett:
-            if self.q:
+        while True:
+            if (self.q):
                 self.addressList = self.leggTilIP( self.addressList, self.q.get() )
-            self.hentData()
-            data = self.pakkData()
-            for ip in self.addressList:
-                self.sendData(ip, data)
+            playing, repeat, shuffle, song, times = self.hentData()
+            data = self.pakkData(playing, repeat, shuffle, song, times)
+            try:
+                for ip in self.addressList:
+                    self.sendData(ip, data)
+            except Exception as e:
+                print('noe gikk galt: ' + e)
+            print('Sendt Oppdatering til: ' + str(self.addressList))
             time.sleep(2)
 
     #Sjekker om IP som akkurat kontaktet program er lagt inn i
@@ -89,9 +93,23 @@ class sendDataThread (threading.Thread):
         return liste
 
     #Setter sammen data til en enkelt streng for overføring
-    def pakkData(self):
+    def pakkData(self, playing, repeat, shuffle, song, time):
         info = ''
         info +='host;;' + self.hostName
+        if playing:
+            info +='|playing;;1'
+        else:
+            info +='|playing;;0'
+
+        info +='|repeat;;' + repeat + ' '
+        info +='|shuffle;;' + shuffle + ' '
+        if (song[0] is not None):
+            info +='|song;;' + song[0] + ';' + song[1] + ';' + song[2] + ';' + song[3] + ' '
+        else:
+            info += '|song;; ; ; ; '
+
+
+        info +='|time;;' + str(time[0]) + ';' + str(time[1])
         return info
 
     #Sender data på port sPort til alle registrerte klienter (opptil fem)
@@ -99,7 +117,7 @@ class sendDataThread (threading.Thread):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             s.connect((ip, self.port))
-            byt = data.encode()
+            byt = data.encode('utf8')
             s.send(byt)
         except Exception as e:
             print('Kunne ikke sende melding til "' + ip + '"')
@@ -109,8 +127,25 @@ class sendDataThread (threading.Thread):
     #Henter inn data til overføring (Kan kobles sammen med API fra forskjellige medieavspillingsprogram som Google Play Music Desktop Player, eller Spotify)
     def hentData(self):
         self.hostName = platform.node()
-        return
 
+        playing = False
+        repeat = ''
+        shuffle = ''
+        song = ['','','','']
+        times = [0,0]
+        #GPMDP
+        filsti = os.getenv('APPDATA') + '\\Google Play Music Desktop Player\\json_store\\playback.json'
+        with open(filsti, 'r', encoding="utf8") as read_file:
+            data = json.load(read_file)
+            playing = data['playing']
+            repeat = data['repeat']
+            shuffle = data['shuffle']
+            songData = data['song']
+            song = [songData['title'], songData['artist'], songData['album'], songData['albumArt']]
+            timeData = data['time']
+            time = [timeData['current'], timeData['total']]
+
+        return playing, repeat, shuffle, song, times
 
 
 class clientThread (threading.Thread):
@@ -120,13 +155,13 @@ class clientThread (threading.Thread):
 
     def run(self):
         #Leser meldingen (int = antall bytes)
-        res = self.clientSocket.recv(16)
+        data = self.clientSocket.recv(16)
         self.clientSocket.close()
-        #Gjør om til string (Fra byte)
-        data = repr(res)
-        #Fjerner ekstra tegn lagt til (b'stopp\n' --> stopp)
-        data = data.replace('\\n','')
-        data = data[2:-1]
+
+        #Dekoder fra bytekode til utf-8 og fjerner 'ny linje'-tegn sist
+        data = data.decode("utf-8", "replace")[0:-1]
+
+
         if data == 'playPause':
             print ('Mottat: "' + data + '"')
             press('playpause')

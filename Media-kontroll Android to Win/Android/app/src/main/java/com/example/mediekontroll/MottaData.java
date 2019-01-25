@@ -1,5 +1,6 @@
 package com.example.mediekontroll;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -12,6 +13,15 @@ public class MottaData extends Thread {
     private String ip;
     private int port;
     private static ServerSocket serverSocket;
+    private Context main;
+
+    //Variabler brukt for å vise sanginfo
+    private String hostnavn = "";
+    private Sang sang = new Sang("", "", "", "");
+    private boolean spiller = false;
+    private String repeat = "";
+    private String shuffle = "";
+    private SangTid tid = new SangTid(0,0);
 
     public MottaData(String ip, int port) {
         this.ip = ip;
@@ -43,38 +53,51 @@ public class MottaData extends Thread {
     }
 
     private void tolkSignal(String str) {
-        Log.v("Medie_Mottat", "Mottat melding: " + str);
+        Log.v("Medie_Mottat_Full", "Mottat melding: " + str);
         String[] kommandoer = str.split("\\|");
         for (String kommando : kommandoer ) {
             String[] ord = kommando.split(";;");
             if (ord[0].equals("host")) {
-                synchronized (SharedData_Motta_Main.globalInstance) {
-                    SharedData_Motta_Main.globalInstance.hostnavn = ord[1];
-                }
+                hostnavn = ord[1];
                 Log.v("Medie_Mottat", "Mottat kommando " + ord[0] + ": '" + ord[1] + "'");
-            } else if (ord[0].equals("tittel")) {
-                synchronized (SharedData_Motta_Main.globalInstance) {
-                    SharedData_Motta_Main.globalInstance.sang.setTittel(ord[1]);
-                }
+            } else if (ord[0].equals("playing")) {
+                spiller = ((Integer.parseInt(ord[1])) == 1);
                 Log.v("Medie_Mottat", "Mottat kommando " + ord[0] + ": '" + ord[1] + "'");
-            } else if (ord[0].equals("artist")) {
-                synchronized (SharedData_Motta_Main.globalInstance) {
-                    SharedData_Motta_Main.globalInstance.sang.setTittel(ord[1]);
-                }
+            } else if (ord[0].equals("repeat")) {
+                repeat = ord[1];
                 Log.v("Medie_Mottat", "Mottat kommando " + ord[0] + ": '" + ord[1] + "'");
-            } else if (ord[0].equals("album")) {
-                synchronized (SharedData_Motta_Main.globalInstance) {
-                    SharedData_Motta_Main.globalInstance.sang.setTittel(ord[1]);
-                }
+            } else if (ord[0].equals("shuffle")) {
+                shuffle = ord[1];
                 Log.v("Medie_Mottat", "Mottat kommando " + ord[0] + ": '" + ord[1] + "'");
-            } else if (ord[0].equals("albumbilde")) {
-                synchronized (SharedData_Motta_Main.globalInstance) {
-                    SharedData_Motta_Main.globalInstance.sang.setTittel(ord[1]);
-                }
+            } else if (ord[0].equals("song")) {
+                String[] sangVar = ord[1].split(";");
+                sang.setTittel(sangVar[0]);
+                sang.setArtist(sangVar[1]);
+                sang.setAlbum(sangVar[2]);
+                sang.setAlbumBilde(sangVar[3]);
+                Log.v("Medie_Mottat", "Mottat kommando " + ord[0] + ": '" + ord[1] + "'");
+            } else if (ord[0].equals("time")) {
+                String[] tidVar = ord[1].split(";");
+                tid.setCurrent(Integer.parseInt(tidVar[0]));
+                tid.setTotal(Integer.parseInt(tidVar[1]));
                 Log.v("Medie_Mottat", "Mottat kommando " + ord[0] + ": '" + ord[1] + "'");
             } else {
                 Log.e("Medie_Mottat", "Mottat ukjent kommando: '" + kommando + "'");
             }
         }
+    }
+
+    //https://medium.com/google-developer-experts/on-properly-using-volatile-and-synchronized-702fc05faac2
+    synchronized String getHostnavn() {
+        return hostnavn;
+    }
+    synchronized Sang getSang() {
+        return sang;
+    }
+    synchronized boolean getSpiller() {
+        return spiller;
+    }
+    synchronized SangTid getSangTid() {
+        return tid;
     }
 }

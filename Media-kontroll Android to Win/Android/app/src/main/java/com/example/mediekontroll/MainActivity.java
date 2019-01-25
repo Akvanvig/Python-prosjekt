@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,17 +21,6 @@ public class MainActivity extends AppCompatActivity {
     int sPort = 49433;
     int mPort = 49434;
     MottaData serverThread;
-    final Handler myHandler = new Handler();
-
-    //Variabler brukt for å vise sanginfo
-    private String hostnavn = "";
-    private boolean endretHostnavn = false;
-    private Sang sang = new Sang("", "", "", "");
-    private boolean endretSangnavn = false;
-    private boolean spiller = false;
-    private boolean endretSpiller = false;
-    private SangTid tid = new SangTid(0,0);
-    private boolean endretTid = false;
 
     //Gui-elementer
     TextView hostView;
@@ -43,20 +33,13 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        synchronized(SharedData_Motta_Main.globalInstance) {
-            hostnavn = SharedData_Motta_Main.globalInstance.hostnavn;
-            endretHostnavn = SharedData_Motta_Main.globalInstance.endretHostnavn;
-            sang = SharedData_Motta_Main.globalInstance.sang;
-            endretSangnavn = SharedData_Motta_Main.globalInstance.endretSangnavn;
-            spiller = SharedData_Motta_Main.globalInstance.spiller;
-            endretSpiller = SharedData_Motta_Main.globalInstance.endretSpiller;
-            tid = SharedData_Motta_Main.globalInstance.tid;
-            endretTid = SharedData_Motta_Main.globalInstance.endretTid;
-        }
-
         //Henter referanser til Gui-elementer
         hostView = (TextView) findViewById(R.id.txtHostnavn);
         playPauseView = (Button) findViewById(R.id.btn_play_pause);
+
+        //Starter å lytte på nettverket på oppgitt port
+        serverThread = new MottaData(ip, mPort);
+        serverThread.start();
 
         //Setter opp jevnlige oppdateringer av gui
         Timer myTimer = new Timer();
@@ -64,10 +47,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {updateGui();}
         }, 0, 1000);
-
-        //Starter å lytte på nettverket på oppgitt port
-        serverThread = new MottaData(ip, mPort);
-        serverThread.start();
     }
 
     @Override
@@ -115,14 +94,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateGui() {
-        myHandler.post(myRunnable);
+        final String hostNavn = serverThread.getHostnavn();
+        final Sang sang = serverThread.getSang();
+        final SangTid tid = serverThread.getSangTid();
+        final boolean spiller = serverThread.getSpiller();
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                //Alle oppdateringer til Gui-et må skje her
+                hostView.setText(hostNavn + "\n\n" + sang.getTittel() + "\n" + sang.getArtist());
+                if (spiller && !(playPauseView.getBackground() == getDrawable(R.drawable.ic_play_arrow_black_24dp))) {
+                    playPauseView.setBackground(getDrawable(R.drawable.ic_play_arrow_black_24dp));
+                } else if (!spiller && (playPauseView.getBackground() == getDrawable(R.drawable.ic_pause_circle_filled_black_24dp))) {
+                    playPauseView.setBackground(getDrawable(R.drawable.ic_pause_circle_filled_black_24dp));
+                }
+            }
+        });
     }
 
-    final Runnable myRunnable = new Runnable() {
-        public void run() {
-            hostView.setText(hostnavn);
-        }
-    };
 }
 
 class Sang {
@@ -150,6 +140,12 @@ class Sang {
     public void setAlbumBilde(String str) {
         this.albumBilde = str;
     }
+    public String getTittel() {
+        return this.tittel;
+    }
+    public String getArtist() {
+        return this.artist;
+    }
 }
 
 class SangTid {
@@ -159,5 +155,17 @@ class SangTid {
     public SangTid(int current, int total) {
         this.current = current;
         this.total = total;
+    }
+    public void setCurrent(int tid) {
+        this.current = tid;
+    }
+    public void setTotal(int tid) {
+        this.total = tid;
+    }
+    public int getCurrent() {
+        return this.current;
+    }
+    public int getTotal() {
+        return this.total;
     }
 }
