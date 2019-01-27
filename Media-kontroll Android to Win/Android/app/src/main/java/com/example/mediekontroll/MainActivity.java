@@ -1,7 +1,8 @@
 package com.example.mediekontroll;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -9,9 +10,11 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -23,8 +26,10 @@ public class MainActivity extends AppCompatActivity {
     MottaData serverThread;
 
     //Gui-elementer
-    TextView hostView;
+    TextView artistView;
+    TextView sangView;
     Button playPauseView;
+    ImageView albumView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +39,12 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //Henter referanser til Gui-elementer
-        hostView = (TextView) findViewById(R.id.txtHostnavn);
+        artistView = (TextView) findViewById(R.id.txtArtist);
+        sangView = (TextView) findViewById(R.id.txtSang);
         playPauseView = (Button) findViewById(R.id.btn_play_pause);
+        albumView = (ImageView) findViewById(R.id.imgImageView);
+        albumView.setAdjustViewBounds(true);
+        albumView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
         //Starter å lytte på nettverket på oppgitt port
         serverThread = new MottaData(ip, mPort);
@@ -46,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         myTimer.schedule(new TimerTask() {
             @Override
             public void run() {updateGui();}
-        }, 0, 1000);
+        }, 0, 500);
     }
 
     @Override
@@ -98,17 +107,30 @@ public class MainActivity extends AppCompatActivity {
         final Sang sang = serverThread.getSang();
         final SangTid tid = serverThread.getSangTid();
         final boolean spiller = serverThread.getSpiller();
+        Bitmap bmpTemp =BitmapFactory.decodeResource(getResources(), R.drawable.yt_music_logo);
+        try {
+            String bilde = sang.getAlbumBilde().replace("=w60-h60", "=w800-h800"); //Endrer bildelink til å gi bedre oppløsning :)
+            URL url = new URL(bilde);
+            bmpTemp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+        } catch (Exception ex) {
+            Log.v("Medie_Albumbilde", ex.getMessage());
+        }
+        final Bitmap bmp = bmpTemp;
+
 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 //Alle oppdateringer til Gui-et må skje her
-                hostView.setText(hostNavn + "\n\n" + sang.getTittel() + "\n" + sang.getArtist());
-                if (spiller && !(playPauseView.getBackground() == getDrawable(R.drawable.ic_play_arrow_black_24dp))) {
-                    playPauseView.setBackground(getDrawable(R.drawable.ic_play_arrow_black_24dp));
-                } else if (!spiller && (playPauseView.getBackground() == getDrawable(R.drawable.ic_pause_circle_filled_black_24dp))) {
+                setTitle(hostNavn);
+                sangView.setText(sang.getTittel());
+                artistView.setText(sang.getArtist());
+                if (spiller && (playPauseView.getBackground() != getDrawable(R.drawable.ic_play_arrow_black_24dp))) {
                     playPauseView.setBackground(getDrawable(R.drawable.ic_pause_circle_filled_black_24dp));
+                } else if (!spiller && (playPauseView.getBackground() != getDrawable(R.drawable.ic_pause_circle_filled_black_24dp))) {
+                    playPauseView.setBackground(getDrawable(R.drawable.ic_play_arrow_black_24dp));
                 }
+                albumView.setImageBitmap(bmp);
             }
         });
     }
@@ -145,6 +167,12 @@ class Sang {
     }
     public String getArtist() {
         return this.artist;
+    }
+    public String getAlbum() {
+        return this.album;
+    }
+    public String getAlbumBilde() {
+        return  this.albumBilde;
     }
 }
 

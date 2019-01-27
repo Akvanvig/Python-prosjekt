@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#212121</color>
     <color name="colorAccent">#D81B60</color>
     <color name="colorButton">#D7D7D7</color>
+    <color name="colorVolume">#777777</color>
+
 
     <color name="lightColorPrimary">#008577</color>
     <color name="ligthColorPrimaryDark">#00574B</color>

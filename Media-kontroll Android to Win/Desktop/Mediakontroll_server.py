@@ -24,6 +24,7 @@ import platform
 mPort = 49433
 sPort = 49434
 maksTilkoblinger = 3
+addresseliste = []
 
 hostName = platform.node()
 dataChanged = True
@@ -47,50 +48,65 @@ def main():
     serverSocket.listen(5)
 
     #Oppretter Tråd for å sende data
-    sdt = sendDataThread(q, sPort, maksTilkoblinger)
+    sdt = sendDataThread(sPort)
+    sdt.daemon = True
     sdt.start()
+    ml = mainLoop(serverSocket)
+    ml.daemon = True
+    ml.start()
     while True:
-        #Godtar tilkoblinger
-        (clientSocket, address) = serverSocket.accept()
-        ct = clientThread(clientSocket)
-        q.put(address)
-        #Mottar kommando fra klient
-        ct.start()
+        time.sleep(5)
 
 
-class sendDataThread (threading.Thread):
-    def __init__(self, q, port, maksTilkoblinger):
+class mainLoop (threading.Thread):
+    def __init__(self, serverSocket):
         threading.Thread.__init__(self)
-        self.q = q
-        self.port = port
-        self.maksTilkoblinger = maksTilkoblinger
-        self.addressList = []
+        self.serverSocket = serverSocket
 
     def run(self):
-        print('Kjører send data tråd')
+        global addresseliste
         while True:
-            if (self.q):
-                self.addressList = self.leggTilIP( self.addressList, self.q.get() )
-            playing, repeat, shuffle, song, times = self.hentData()
-            data = self.pakkData(playing, repeat, shuffle, song, times)
-            try:
-                for ip in self.addressList:
-                    self.sendData(ip, data)
-            except Exception as e:
-                print('noe gikk galt: ' + e)
-            print('Sendt Oppdatering til: ' + str(self.addressList))
-            time.sleep(2)
+            #Godtar tilkoblinger
+            (clientSocket, address) = self.serverSocket.accept()
+            ct = clientThread(clientSocket)
+            addresseliste = self.leggTilIP(addresseliste, address)
+            #Mottar kommando fra klient
+            ct.start()
 
     #Sjekker om IP som akkurat kontaktet program er lagt inn i
     def leggTilIP(self, liste, ip):
+        global maksTilkoblinger
         #IP kommer inn som "('192.168.1.6', 35024)" (Henter ut bare IP)
         ip_str = str(ip).split("'")[1]
         if ip_str not in liste:
             liste.append(ip_str)
-            if len(liste) > self.maksTilkoblinger:
+            if len(liste) > maksTilkoblinger:
                 liste.pop(0)
             print(liste)
         return liste
+
+
+class sendDataThread (threading.Thread):
+    def __init__(self, port):
+        threading.Thread.__init__(self)
+        self.port = port
+
+    def run(self):
+        global addresseliste
+
+        print('Kjører send data tråd')
+        while True:
+            playing, repeat, shuffle, song, times = self.hentData()
+            data = self.pakkData(playing, repeat, shuffle, song, times)
+            for i in range(len(addresseliste)):
+                try:
+                    self.sendData(addresseliste[i], data)
+                except Exception as e:
+                    print(e)
+
+            #print('Sendt Oppdatering til: ' + str(addresseliste))
+            time.sleep(2)
+
 
     #Setter sammen data til en enkelt streng for overføring
     def pakkData(self, playing, repeat, shuffle, song, time):
@@ -104,7 +120,7 @@ class sendDataThread (threading.Thread):
         info +='|repeat;;' + repeat + ' '
         info +='|shuffle;;' + shuffle + ' '
         if (song[0] is not None):
-            info +='|song;;' + song[0] + ';' + song[1] + ';' + song[2] + ';' + song[3] + ' '
+            info +='|song;;' + song[0] + ';' + song[1] + ';' + song[2] + ';' + song[3] + ''
         else:
             info += '|song;; ; ; ; '
 
