@@ -1,9 +1,8 @@
 import time
 
-def bubblesort(tekst):
-    liste = list(tekst)
+def bubblesort(liste):
     for runde in range(len(liste) - 1, 0, -1):
-        print(''.join(liste))
+        print(liste)
         uendret = True
         for i in range(runde):
             if liste[i] > liste[i + 1]:
@@ -11,10 +10,12 @@ def bubblesort(tekst):
                 uendret = False
         if (uendret):
             break
-    return (''.join(liste))
+    return (liste)
 
-tekst = input('Skriv noe: ')
-start = time.time()
-tekst = bubblesort(tekst)
-slutt = time.time()
-print('{0:.3f} seconds'.format((slutt - start)))
+if __name__ == "__main__":
+    tekst = input('Skriv noe: ')
+    start = time.time()
+    liste = list(tekst)
+    tekst = ''.join(bubblesort(liste))
+    slutt = time.time()
+    print('{0:.3f} seconds'.format((slutt - start)))

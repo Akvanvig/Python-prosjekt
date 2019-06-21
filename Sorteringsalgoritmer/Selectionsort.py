@@ -1,5 +1,3 @@
-liste = [0, 5, 32, 1, 3, 22, 102, -22]
-
 def selectionsort(liste):
     lengde = len(liste)
     min = 0                                 #minimumsverdi funnet i gjeldende gjennomgangen
@@ -12,6 +10,8 @@ def selectionsort(liste):
         print(liste)
     return liste
 
-print(liste)
-liste = selectionsort(liste)
-print(liste)
+if __name__ == "__main__":
+    liste = [0, 5, 32, 1, 3, 22, 102, -22]
+    print(liste)
+    liste = selectionsort(liste)
+    print(liste)
