@@ -1,5 +1,5 @@
 import time
-import Bubblesort as b, Selectionsort as s, Insertionsort as i
+import Bubblesort as b, Selectionsort as s, Insertionsort as i, Mergesort as m
 liste = [0, 5, 32, 1, 3, 22, 102, -22]
 
 print()
@@ -24,6 +24,14 @@ print()
 print('Insertionsort:')
 start = time.time()
 ls = i.insertionsort(liste.copy())
+slutt = time.time()
+print(ls)
+print('{0:.3f} seconds'.format((slutt - start)))
+
+print()
+print('Mergesort:')
+start = time.time()
+ls = m.mergeSort(liste.copy())
 slutt = time.time()
 print(ls)
 print('{0:.3f} seconds'.format((slutt - start)))
