@@ -1,0 +1,9 @@
+#Kommandoer:
+# -a for å oppgi artist
+# -t for å oppgi navn på sang
+# -v for å laste ned video
+# -l for å laste ned lyd (standard, ikke nødvendig å oppgi)
+# <-- kan brukes for å kommentere
+https://www.youtube.com/watch?v=nFAK8Vj62WM -v
+https://www.youtube.com/watch?v=LDU_Txk06tM -a Noisestorm -t Crab Rave
+https://www.youtube.com/watch?v=9bZkp7q19f0 -a Psy -t Gangnam Style

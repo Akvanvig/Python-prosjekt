@@ -1,0 +1,9 @@
+Installer "youtube-dl"
+	- "pip install youtube-dl"
+
+Installer "ffmpeg" om noe skal konverteress
+	- "pip install ffmpeg"
+
+Sett opp "libav" om mp3 filer skal brukes:
+	- Last ned her "http://builds.libav.org/windows/release-gpl/"
+	- Legg filene fra "\win64\usr\bin" til i systemvariabelen path
