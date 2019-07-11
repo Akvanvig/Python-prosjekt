@@ -1,7 +1,7 @@
 Installer "youtube-dl"
 	- "pip install youtube-dl"
 
-Installer "ffmpeg" om noe skal konverteress
+Installer "ffmpeg" om noe skal konverteress (brukes for å lage mp3-filer)
 	- "pip install ffmpeg"
 
 Sett opp "libav" om mp3 filer skal brukes:

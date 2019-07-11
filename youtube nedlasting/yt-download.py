@@ -123,6 +123,5 @@ def sangerFraFil(filnavn):
         metadata = [erMp3, {"title":tittel, "artist":artist}]
         lastNedVideo(lenke,ytdlArgs, metadata)
 
-
 if __name__ == "__main__":
-    sangerFraFil(".\\testfil.txt")
+    sangerFraFil(".\\musikkfil.txt")
