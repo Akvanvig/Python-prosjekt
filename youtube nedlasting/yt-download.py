@@ -14,7 +14,8 @@ class ytdlLogger(object):
         pass
 
     def warning(self, msg):
-        print("warn: " + msg)
+        pass
+        #print("warn: " + msg)
 
     def error(self, msg):
         print("err: " + msg)
@@ -66,7 +67,7 @@ ytdl_opts = [{
         "preferredcodec": "mp3",
         "preferredquality": "192",
     }],
-    "outtmpl": ".\\Musikk\\%(artist)s - %(track)s.%(ext)s",
+    "outtmpl": ".\\Musikk\\%(artist)s - %(track)s #%(id)s.%(ext)s",
     "logger": ytdlLogger(),
     "progress_hooks": [myHook]
 },{
