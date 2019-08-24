@@ -5,12 +5,16 @@ def main():
     kjerner = mp.cpu_count()
     pool = mp.Pool(kjerner)
 
+    startSok = time.time()
     resultsApplyResults = [pool.apply_async(workerProcess, ()) for i in range(kjerner)]
     results = []
     for res in resultsApplyResults:
         results.extend(res.get(timeout=10000))
     for res in results:
-        print('Prosessen brukte {tidBrukt:.3f} sekunder på å finne passordet "{resultat}"'.format(**res))
+        #print('Prosessen brukte {tidBrukt:.3f} sekunder på å finne passordet "{resultat}"'.format(**res))
+        print(res)
+    sluttSok = time.time()
+    print('Resultat ble funnet etter:\n{} sekunder'.format(sluttSok - startSok))
 
 def workerProcess():
     #Sets of symbols that can be used for cracking passwords, any other sets of symbols can be added beneath
@@ -22,9 +26,9 @@ def workerProcess():
 
     symbols = smallLetters + largeLetters + numbers
     startpunkt = time.time()
-    res = brute("TesT01A", symbols, 7)
+    res = brute("T3sT", symbols, 5)
     sluttpunkt = time.time()
-    return {'tidBrukt':(sluttpunkt - startpunkt), 'resultat': res}
+    return sluttpunkt - startpunkt, res
 
 def brute(p, sym, mL): #Password, symbols and maxLength
     listChars = list(sym)
