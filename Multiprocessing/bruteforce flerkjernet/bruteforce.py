@@ -39,7 +39,7 @@ def startSok(kodeord, startpunkt, sluttpunkt, tegn, antProsesser):
     #Leser resultat fra prosessene
     resultaterStr = []
     for res in resultat:
-        resultaterStr.extend(res.get(timeout=900))
+        resultaterStr.extend(res.get(timeout=3000))
     print('Resultat funnet: {}\n'.format(resultaterStr))
     sluttSok = time()
 
