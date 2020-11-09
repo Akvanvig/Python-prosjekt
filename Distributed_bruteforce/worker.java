@@ -15,7 +15,8 @@ import com.google.gson.*; //https://github.com/google/gson/blob/master/UserGuide
 import com.google.gson.JsonObject;
 
 class worker {
-  private static String url = "http://127.0.0.1";
+  //private static String url = "http://127.0.0.1";
+  private static String url = "http://controller.controller-deployment.svc"
   private static int port = 80;
   private static int retryTime = 10; //Seconds
 
